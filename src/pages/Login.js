@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { Button,Form, Input, message   } from "antd";
-import './registerLoginPage.css';
+import './RegisterLogin.css';
 
 function Login(){
     return(
