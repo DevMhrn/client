@@ -2,8 +2,30 @@ import React from "react";
 import { Form, Input, Button, Radio, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import './RegisterLogin.css';
+import { registerUser } from "../CRUDcalls/users";
 
 function Register() {
+    const navigate = useNavigate();
+    const onFinish  = async(values)=>{
+        console.log(values);
+        try{
+            const response = await registerUser(values);
+            console.log(response);
+            if(response.success){
+                message.success(response.message);
+                navigate('/login');
+            }
+            else {
+                message.error(response.message);
+            }
+
+        }
+        catch(error){
+            console.log(error);
+            message.error('User Registration Failed, please try again');
+        }
+    };
+
     return (
         <div className="Register-main">
             <header className="App-header">
@@ -13,7 +35,7 @@ function Register() {
                     <h1>Register to Quiz</h1>
                 </section>
                 <section className="right-section">
-                    <Form layout="vertical" >{/* //need to add onFinish function */}
+                    <Form layout="vertical"  onFinish={onFinish}>{/* //need to add onFinish function */}
                     <Form.Item
                         label="Name"
                         htmlFor="name"

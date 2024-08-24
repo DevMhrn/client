@@ -1,11 +1,43 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Button,Form, Input, message   } from "antd";
 import './RegisterLogin.css';
+import { loginUser } from "../CRUDcalls/users";
+import { useEffect } from "react";
 
 function Login(){
+
+    const navigate = useNavigate();
+    const onFinish = async (values)=>{
+        console.log(values);
+        try{
+            const response = await loginUser(values);
+            console.log(response);
+            if(response.success){
+                message.success(response.message);
+                localStorage.setItem('authToken', response.authToken);
+                navigate('/');
+            }
+            else {
+                message.error(response.message);
+            }
+        }
+        catch(error){
+            console.log(error);
+            message.error('User Login Failed, please try again');
+        }
+
+        
+    }
+    useEffect(()=>{
+        if(localStorage.getItem('authToken')){
+            navigate('/');
+        }
+    },[]);
+
     return(
+
         <div className="login-main">
             <header className="App-header">
                 <main className="main-area mw-500 text-center px-3 ">
@@ -15,7 +47,7 @@ function Login(){
                         </h1>
                     </section>
                     <section className="right-section">
-                    <Form layout="vertical" >  {/* //need to add onFinish function */}
+                    <Form layout="vertical" onFinish={onFinish} >  {/* //need to add onFinish function */}
                         <Form.Item
                             label="Email"
                             htmlFor="email"
