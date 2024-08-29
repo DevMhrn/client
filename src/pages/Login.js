@@ -1,91 +1,80 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-import { Button,Form, Input, message   } from "antd";
+import { Button, Form, Input, message } from "antd";
 import './RegisterLogin.css';
 import { loginUser } from "../CRUDcalls/users";
-import { useEffect } from "react";
 
-function Login(){
-
+function Login() {
     const navigate = useNavigate();
-    const onFinish = async (values)=>{
+
+    const onFinish = async (values) => {
         console.log(values);
-        try{
+        try {
             const response = await loginUser(values);
             console.log(response);
-            if(response.success){
-                message.success(response.message);
+            if (response.success) {
+                message.success(response.message || 'Login successful!');
                 localStorage.setItem('authToken', response.authToken);
                 navigate('/');
+            } else {
+                message.error(response.message || 'Login failed!');
             }
-            else {
-                message.error(response.message);
-            }
-        }
-        catch(error){
+        } catch (error) {
             console.log(error);
             message.error('User Login Failed, please try again');
         }
+    };
 
-        
-    }
-    useEffect(()=>{
-        if(localStorage.getItem('authToken')){
+    useEffect(() => {
+        if (localStorage.getItem('authToken')) {
             navigate('/');
         }
-    },[]);
+    
 
-    return(
+    }, []);
 
+    return (
         <div className="login-main">
             <header className="App-header">
-                <main className="main-area mw-500 text-center px-3 ">
+                <main className="main-area mw-500 text-center px-3">
                     <section className="left-section">
-                        <h1>
-                            Login to Quiz App
-                        </h1>
+                        <h1>Login to Quiz App</h1>
                     </section>
                     <section className="right-section">
-                    <Form layout="vertical" onFinish={onFinish} >  {/* //need to add onFinish function */}
-                        <Form.Item
-                            label="Email"
-                            htmlFor="email"
-                            name="email"
-                            className="d-block"
-                            rules={[{ required: true, message: "Email is required" }]}
+                        <Form layout="vertical" onFinish={onFinish}>
+                            <Form.Item
+                                label="Email"
+                                name="email"
+                                className="d-block"
+                                rules={[{ required: true, message: "Email is required" }]}
                             >
-                            <Input
-                                id="email"
-                                type="text"
-                                placeholder="Enter your Email"
-                            ></Input>
+                                <Input
+                                    type="text"
+                                    placeholder="Enter your Email"
+                                />
                             </Form.Item>
 
                             <Form.Item
-                            label="Password"
-                            htmlFor="password"
-                            name="password"
-                            className="d-block"
-                            rules={[{ required: true, message: "Password is required" }]}
+                                label="Password"
+                                name="password"
+                                className="d-block"
+                                rules={[{ required: true, message: "Password is required" }]}
                             >
-                            <Input
-                                id="password"
-                                type="password"
-                                placeholder="Enter your Password"
-                                
-                            ></Input>
+                                <Input
+                                    type="password"
+                                    placeholder="Enter your Password"
+                                />
                             </Form.Item>
 
                             <Form.Item className="d-block">
-                            <Button
-                                type="primary"
-                                block
-                                htmlType="submit"
-                                style={{ fontSize: "1rem", fontWeight: "600", width:"80px" }}
-                            >
-                                Login
-                            </Button>
+                                <Button
+                                    type="primary"
+                                    block
+                                    htmlType="submit"
+                                    style={{ fontSize: "1rem", fontWeight: "600" }}
+                                >
+                                    Login
+                                </Button>
                             </Form.Item>
                         </Form>
                         <section className='login-to-register'>
@@ -94,11 +83,10 @@ function Login(){
                             </p>
                         </section>
                     </section>
-
                 </main>
-
             </header>
         </div>
-    )
+    );
 }
+
 export default Login;

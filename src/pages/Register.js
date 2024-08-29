@@ -10,10 +10,13 @@ function Register() {
         console.log(values);
         try{
             const response = await registerUser(values);
+            if(localStorage.getItem('authToken')) {
+                navigate('/');
+            }
             console.log(response);
             if(response.success){
                 message.success(response.message);
-                navigate('/login');
+                
             }
             else {
                 message.error(response.message);

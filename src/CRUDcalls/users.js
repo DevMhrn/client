@@ -26,6 +26,7 @@ export const getUsers = async()=>{
         const response = await axiosInstance.get(`${API_BASE_URL}/app/users/profile`);
         return response.data;
     }
+    
     catch(error){
         return error.response.data;
     }
